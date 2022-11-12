@@ -1,20 +1,14 @@
 import React from "react"
 import config from "../config.json"
 import styled from "styled-components"
-import { CSSReset } from "../src/components/CSSReset"
 import Menu from "../src/components/Menu"
 import { StyledTimeline } from "../src/components/Timeline"
 
 function HomePage() {
-	const estilosDaHomePage = {
-		// background: "red"
-	}
 	const [filterValue, setFilterValue] = React.useState("")
-	// console.log("Dentro da Home", config.playlists)
 
 	return (
 		<>
-			<CSSReset />
 			<div style={{
 				display: "flex",
 				flexDirection: "column",
@@ -22,9 +16,11 @@ function HomePage() {
 				// backgroundColor: "red",
 			}}>
 				{/* Prop Drilling */}
-				<Menu filterValue={ filterValue } setFilterValue={ setFilterValue } />
+				<Menu filterValue={filterValue} setFilterValue={setFilterValue} />
 				<Header />
-				<TimeLine searchValue={ filterValue } playlists={ config.playlists } />
+				<Timeline searchValue={filterValue} playlists={config.playlists}>
+					Conteúdo
+				</Timeline>
 			</div>
 		</>
 	)
@@ -41,6 +37,8 @@ export default HomePage
 // }
 
 const StyledHeader = styled.div`
+	background: ${({ theme }) => theme.backgroundLevel1};
+
 	img {
 		width: 80px;
 		height: 80px;
@@ -57,7 +55,7 @@ const StyledHeader = styled.div`
 
 const StyledBanner = styled.div`
     background-color: blue;
-    background-image: url(${({ bg }) => bg}); // recebendo a prop bg
+    background-image: url(${({ bg }) => bg}); /* recebendo a prop bg */
     /* background-image: url(${config.bg}); */
     height: 230px;
 `
@@ -65,7 +63,7 @@ const StyledBanner = styled.div`
 function Header() {
 	return (
 		<StyledHeader>
-			<StyledBanner bg={config.bg} />   // passando a prop bg para o StyledBanner
+			<StyledBanner bg={config.bg} />   {/*  passando a prop bg para o StyledBanner */}
 			<section className="user-info">
 				<img src={config.github} />
 				<div>
@@ -77,7 +75,7 @@ function Header() {
 	)
 }
 
-function TimeLine({ searchValue, ...props }) {
+function Timeline({ searchValue, ...props }) {
 	// console.log("Dentro do componente", props.playlists)
 	const playlistNames = Object.keys(props.playlists)
 
@@ -91,20 +89,22 @@ function TimeLine({ searchValue, ...props }) {
 					<section key={playlistName}>
 						<h2>{playlistName}</h2>
 						<div>
-							{videos.filter((video) => {
-								const titleNormalized = video.title.toLowerCase()
-								const searchValueNormalized = searchValue.toLowerCase()
-								return titleNormalized.includes(searchValueNormalized)
-							}).map((video) => {
-								return (
-									<a key={video.url} href={video.url} >
-										<img src={video.thumb} />
-										<span>
-											{video.title}
-										</span>
-									</a>
-								)
-							})}
+							{videos
+								.filter((video) => {
+									const titleNormalized = video.title.toLowerCase()
+									const searchValueNormalized = searchValue.toLowerCase()
+									return titleNormalized.includes(searchValueNormalized)
+								})
+								.map((video) => {
+									return (
+										<a key={video.url} href={video.url} >
+											<img src={video.thumb} />
+											<span>
+												{video.title}
+											</span>
+										</a>
+									)
+								})}
 						</div>
 					</section>
 				)
